@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 移动端关键适配标签 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>美食测评榜单(个人版，爱信不信)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            padding: 16px;
+            font-family: "Microsoft Yahei", system-ui, sans-serif;
+            background: linear-gradient(120deg, #f0f4ff, #fff7f7);
+            min-height: 100vh;
+        }
+        .page-title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 700;
+            background: linear-gradient(90deg, #3671e9, #f26522);
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 18px;
+            letter-spacing: 0.5px;
+        }
+        .tab-wrap {
+            display: flex;
+            border-bottom: 2px solid #e0e7ff;
+            margin-bottom: 12px;
+            background: #fff;
+            border-radius: 10px 10px 0 0;
+            overflow: hidden;
+        }
+        .tab-item {
+            flex: 1;
+            padding: 10px 6px;
+            font-size: 14px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            background: transparent;
+            font-weight: 500;
+        }
+        .tab-item:hover {
+            background: #f0f4ff;
+        }
+        .tab-item.active {
+            background: #3671e9;
+            color: #fff;
+            font-weight: bold;
+        }
+        .filter-box {
+            background: #ffffff;
+            padding: 12px;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(54, 113, 233, 0.1);
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        .filter-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .filter-item label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #333;
+            white-space: nowrap;
+        }
+        select {
+            padding: 6px 8px;
+            border: 1px solid #d0d7f5;
+            border-radius: 6px;
+            font-size: 13px;
+            min-width: 80px;
+            transition: border 0.2s;
+        }
+        select:focus {
+            outline: none;
+            border-color: #3671e9;
+        }
+        .count-tip {
+            color: #3671e9;
+            font-weight: bold;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+        .btn {
+            padding: 6px 10px;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+        #importBtn {background: #3671e9;}
+        #importBtn:hover {background: #255ed8;}
+        #exportCsvBtn {background: #22c55e;}
+        #exportCsvBtn:hover {background: #16a34a;}
+        #exportHtmlBtn {background: #f97316;}
+        #exportHtmlBtn:hover {background: #ea580c;}
+        #fileInput {display: none;}
+        .tab-panel {display: none;}
+        .tab-panel.show {display: block;}
+        /* 表格容器横向滚动，手机左右滑动 */
+        .table-wrap {
+            width: 100%;
+            overflow-x: auto;
+            border-radius: 10px;
+        }
+        table {
+            min-width: 720px;
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            overflow: hidden;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+        }
+        th, td {
+            padding: 10px 6px;
+            text-align: center;
+            border: none;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 13px;
+        }
+        th {
+            background: linear-gradient(90deg, #3671e9, #5488f2);
+            color: #fff;
+            font-weight: 500;
+        }
+        tr:nth-child(even) {background-color: #f9fbff;}
+        tr:hover {
+            background-color: #eef4ff;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .rank-top1 {background: #fff7e0 !important;}
+        .rank-top2 {background: #e8f0ff !important;}
+        .rank-top3 {background: #e8fff0 !important;}
+        .mask {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.45);
+            display: none;
+            z-index: 99;
+            backdrop-filter: blur(2px);
+        }
+        .remark-drawer {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            max-width: 420px;
+            height: 100vh;
+            background: #fff;
+            box-shadow: -4px 0 24px rgba(0,0,0,0.12);
+            padding: 24px 16px;
+            transition: right 0.35s ease;
+            z-index: 100;
+        }
+        .remark-drawer.open {right: 0;}
+        .drawer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+        }
+        .drawer-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #222;
+        }
+        .close-btn {
+            border: none;
+            background: transparent;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+        .close-btn:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+        .drawer-info {
+            margin-bottom: 16px;
+            line-height: 1.8;
+            font-size: 14px;
+        }
+        .drawer-info p {margin: 4px 0;}
+        .drawer-info span {
+            color: #3671e9;
+            font-weight: 500;
+        }
+        .drawer-remark-box {
+            margin-top: 12px;
+            padding: 12px;
+            background: #f8faff;
+            border-radius: 8px;
+            min-height: 120px;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            color: #333;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="page-title">美食测评榜单(个人版，爱信不信)</h1>
+
+    <div class="tab-wrap">
+        <div class="tab-item active" data-tab="unTest">未实测榜</div>
+        <div class="tab-item" data-tab="tested">实测榜</div>
+    </div>
+
+    <div class="filter-box">
+        <div class="filter-item">
+            <label>型号：</label>
+            <select id="typeSelect">
+                <option value="">全部</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+                <option value="E">E</option>
+            </select>
+        </div>
+        <div class="filter-item">
+            <label>价格：</label>
+            <select id="priceSelect">
+                <option value="">全部</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+            </select>
+        </div>
+        <div class="count-tip">共 <span id="currentCount">0</span> 条</div>
+        <input type="file" id="fileInput" accept=".csv" />
+        <button class="btn" id="importBtn">导入CSV</button>
+        <button class="btn" id="exportCsvBtn">导出CSV</button>
+        <button class="btn" id="exportHtmlBtn">导出HTML</button>
+    </div>
+
+    <div class="tab-panel show" id="panel-unTest">
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>排名</th>
+                        <th>ID</th>
+                        <th>名称</th>
+                        <th>总分</th>
+                        <th>型号</th>
+                        <th>价格</th>
+                        <th>颜值</th>
+                        <th>特色</th>
+                        <th>服务</th>
+                    </tr>
+                </thead>
+                <tbody id="table-unTest"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="tab-panel" id="panel-tested">
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>排名</th>
+                        <th>ID</th>
+                        <th>名称</th>
+                        <th>总分</th>
+                        <th>型号</th>
+                        <th>价格</th>
+                        <th>颜值</th>
+                        <th>特色</th>
+                        <th>服务</th>
+                    </tr>
+                </thead>
+                <tbody id="table-tested"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="mask" id="mask"></div>
+    <div class="remark-drawer" id="drawer">
+        <div class="drawer-header">
+            <div class="drawer-title">测评详情 & 备注</div>
+            <button class="close-btn" id="closeBtn">×</button>
+        </div>
+        <div class="drawer-info">
+            <p>唯一ID：<span id="drawId"></span></p>
+            <p>测评名称：<span id="drawName"></span></p>
+            <p>综合总分：<span id="drawScore"></span></p>
+            <p>榜单分类：<span id="drawStatus"></span></p>
+        </div>
+        <div style="font-weight:500;font-size:14px;">完整备注内容：</div>
+        <div class="drawer-remark-box" id="drawRemark"></div>
+    </div>
+
+<script>
+// 初始内置数据
+let rawData = [
+    {id:"DuoEr8868",status:"实测",name:"爱琴海黛汐",score:10.5,type:"D",price:5,look:4,feature:3.5,service:3,remark:""},
+    {id:"aayang18983377514",status:"实测",name:"龙头寺多多",score:8,type:"B",price:5,look:3,feature:2,service:3,remark:""},
+    {id:"cf123789",status:"实测",name:"楚菲",score:10,type:"C",price:5,look:3.5,feature:3.5,service:3,remark:""},
+    {id:"DanDan688",status:"实测",name:"爱琴海丹丹",score:8,type:"B",price:5,look:3,feature:2,service:3,remark:"完全不推荐"},
+    {id:"a529826",status:"实测",name:"乔薇",score:12,type:"C",price:5,look:4,feature:4,service:4,remark:""},
+    {id:"Huaxizi123",status:"实测",name:"花西子",score:10.5,type:"B",price:4,look:3.5,feature:3.5,service:3.5,remark:""},
+    {id:"dsbDD",status:"未实测",name:"大石坝 07多多",score:11.5,type:"C",price:5,look:4,feature:4.5,service:3,remark:"看起来挺年轻的，服务待定"},
+    {id:"jiajia530",status:"未实测",name:"佳妮",score:10.5,type:"C",price:5,look:3.5,feature:3.5,service:3.5,remark:"特色待定"},
+    {id:"saosaob",status:"未实测",name:"南坪爽爽",score:10.5,type:"B",price:5,look:3.5,feature:3,service:4,remark:"待定"},
+];
+
+const mask = document.getElementById("mask");
+const drawer = document.getElementById("drawer");
+const closeBtn = document.getElementById("closeBtn");
+const drawId = document.getElementById("drawId");
+const drawName = document.getElementById("drawName");
+const drawScore = document.getElementById("drawScore");
+const drawStatus = document.getElementById("drawStatus");
+const drawRemark = document.getElementById("drawRemark");
+const typeSelect = document.getElementById("typeSelect");
+const priceSelect = document.getElementById("priceSelect");
+const currentCountDom = document.getElementById("currentCount");
+const importBtn = document.getElementById("importBtn");
+const exportCsvBtn = document.getElementById("exportCsvBtn");
+const exportHtmlBtn = document.getElementById("exportHtmlBtn");
+const fileInput = document.getElementById("fileInput");
+
+function closeDrawer() {
+    mask.style.display = "none";
+    drawer.classList.remove("open");
+}
+closeBtn.addEventListener("click", closeDrawer);
+mask.addEventListener("click", closeDrawer);
+
+importBtn.addEventListener("click", ()=>fileInput.click());
+
+// 标准CSV逐字符解析，解决读取截断、丢行问题
+function parseCSV(text) {
+    const rows = [];
+    let currentRow = [];
+    let cell = "";
+    let inQuote = false;
+    for (let i = 0; i < text.length; i++) {
+        const c = text[i];
+        const next = text[i+1];
+        if (inQuote) {
+            if (c === '"' && next === '"') {
+                cell += '"';
+                i++;
+            } else if (c === '"') {
+                inQuote = false;
+            } else {
+                cell += c;
+            }
+        } else {
+            if (c === '"') {
+                inQuote = true;
+            } else if (c === ",") {
+                currentRow.push(cell.trim());
+                cell = "";
+            } else if (c === "\n" || c === "\r") {
+                if (c === "\r" && next === "\n") i++;
+                currentRow.push(cell.trim());
+                rows.push(currentRow);
+                currentRow = [];
+                cell = "";
+            } else {
+                cell += c;
+            }
+        }
+    }
+    if (cell || currentRow.length > 0) {
+        currentRow.push(cell.trim());
+        rows.push(currentRow);
+    }
+    return rows;
+}
+
+// 修复后的CSV导入逻辑
+fileInput.addEventListener("change", function(e){
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.readAsText(file, "UTF-8");
+    reader.onload = function(event){
+        const text = event.target.result;
+        const allRows = parseCSV(text);
+        // 过滤有效行，必须不少于11列
+        const validRows = allRows.filter(r => r.length >= 11);
+        if(validRows.length < 2) {
+            alert("CSV无有效数据，请检查文件！");
+            return;
+        }
+        const newData = [];
+        // 跳过表头，读取所有数据行
+        for(let i = 1; i < validRows.length; i++){
+            const r = validRows[i];
+            newData.push({
+                id: r[1] || "",
+                name: r[2] || "",
+                score: Number(r[3]) || 0,
+                type: r[4] || "",
+                price: Number(r[5]) || 0,
+                look: Number(r[6]) || 0,
+                feature: Number(r[7]) || 0,
+                service: Number(r[8]) || 0,
+                status: r[9] || "",
+                remark: r[10] || ""
+            });
+        }
+        rawData = newData;
+        renderList();
+        alert(`导入成功，共读取 ${newData.length} 条数据`);
+        fileInput.value = "";
+    }
+})
+
+// 页签切换
+const tabItems = document.querySelectorAll(".tab-item");
+let activeTab = "unTest";
+tabItems.forEach(tab => {
+    tab.addEventListener("click", () => {
+        tabItems.forEach(i => i.classList.remove("active"));
+        tab.classList.add("active");
+        activeTab = tab.dataset.tab;
+        document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("show"));
+        document.getElementById(`panel-${activeTab}`).classList.add("show");
+        renderList();
+    })
+});
+
+// 筛选过滤
+function getFilterData() {
+    const filterType = typeSelect.value;
+    const filterPrice = priceSelect.value;
+    let list = rawData.filter(item => item.status === (activeTab === "unTest" ? "未实测" : "实测"));
+    if(filterType) list = list.filter(i => i.type === filterType);
+    if(filterPrice) list = list.filter(i => i.price === Number(filterPrice));
+    list.sort((a,b) => b.score - a.score);
+    return list;
+}
+
+// 渲染表格
+function renderList() {
+    const data = getFilterData();
+    currentCountDom.innerText = data.length;
+    const tbodyId = `table-${activeTab}`;
+    const tbody = document.getElementById(tbodyId);
+    tbody.innerHTML = "";
+    data.forEach((item, index) => {
+        const tr = document.createElement("tr");
+        if(index === 0) tr.className = "rank-top1";
+        if(index === 1) tr.className = "rank-top2";
+        if(index === 2) tr.className = "rank-top3";
+        tr.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${item.id}</td>
+            <td>${item.name}</td>
+            <td>${item.score}</td>
+            <td>${item.type}</td>
+            <td>${item.price}</td>
+            <td>${item.look}</td>
+            <td>${item.feature}</td>
+            <td>${item.service}</td>
+        `;
+        tr.onclick = () => {
+            drawId.innerText = item.id;
+            drawName.innerText = item.name;
+            drawScore.innerText = item.score;
+            drawStatus.innerText = item.status;
+            drawRemark.innerText = item.remark || "暂无备注信息";
+            mask.style.display = "block";
+            drawer.classList.add("open");
+        }
+        tbody.appendChild(tr);
+    })
+}
+
+// 导出CSV
+function exportCSV() {
+    if (rawData.length === 0) {
+        alert("无数据，无法导出！");
+        return;
+    }
+    const headers = ["排名","ID","名称","总分","型号","价格","颜值","特色","服务","状态","备注"];
+    let csvStr = headers.join(",") + "\n";
+    const sortedAllData = [...rawData].sort((a,b) => b.score - a.score);
+    sortedAllData.forEach((item, idx) => {
+        const esc = s => `"${String(s).replace(/"/g,'""')}"`;
+        const row = [
+            idx + 1,
+            esc(item.id),
+            esc(item.name),
+            item.score,
+            esc(item.type),
+            item.price,
+            item.look,
+            item.feature,
+            item.service,
+            esc(item.status),
+            esc(item.remark)
+        ];
+        csvStr += row.join(",") + "\n";
+    });
+    const blob = new Blob(["\uFEFF" + csvStr], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.download = `美食测评_全部数据.csv`;
+    a.href = url;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+exportCsvBtn.addEventListener("click", exportCSV);
+
+// 导出完整HTML：页面按钮保留，导出文件自动隐藏按钮
+function exportFullHtml() {
+    const dataStr = JSON.stringify(rawData, null, 4);
+    let htmlCode = document.documentElement.outerHTML;
+    htmlCode = htmlCode.replace(/let rawData = \[.*?\];/s, `let rawData = ${dataStr};`);
+
+    // 插入样式隐藏导入导出按钮与上传框
+    const hideCss = `<style>#importBtn,#exportCsvBtn,#exportHtmlBtn,#fileInput{display:none !important;}</style>`;
+    htmlCode = htmlCode.replace("</head>", hideCss + "</head>");
+
+    // 清理无用导出导入JS代码，避免报错
+    htmlCode = htmlCode.replace(/importBtn\.addEventListener\("click", \(\)=>fileInput\.click\(\)\);/,"");
+    htmlCode = htmlCode.replace(/fileInput\.addEventListener\("change", function\(e\)\{[\s\S]*?fileInput\.value = "";\s*\}\)/,"");
+    htmlCode = htmlCode.replace(/function exportCSV\(\)\{[\s\S]*?exportCsvBtn\.addEventListener\("click", exportCSV\);/,"");
+    htmlCode = htmlCode.replace(/exportHtmlBtn\.addEventListener\("click", exportFullHtml\);/,"");
+    htmlCode = htmlCode.replace(/function exportFullHtml\(\)\{[\s\S]*?alert\("完整HTML已导出！打开\/复制文件数据不会丢失"\);\}/,"");
+
+    const blob = new Blob([htmlCode], {type:"text/html;charset=utf-8"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.download = "美食测评榜单(永久保存版).html";
+    a.href = url;
+    a.click();
+    URL.revokeObjectURL(url);
+    alert("导出完成！导出文件内导入导出按钮已自动隐藏");
+}
+exportHtmlBtn.addEventListener("click", exportFullHtml);
+
+typeSelect.addEventListener("change", renderList);
+priceSelect.addEventListener("change", renderList);
+renderList();
+</script>
+</body>
+</html>
