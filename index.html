@@ -1,570 +1,996 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <!-- “∆∂Ø∂Àπÿº¸  ≈‰±Í«© -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>√¿ ≥≤‚∆¿∞Òµ•(∏ˆ»À∞Ê£¨∞Æ–≈≤ª–≈)</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            padding: 16px;
-            font-family: "Microsoft Yahei", system-ui, sans-serif;
-            background: linear-gradient(120deg, #f0f4ff, #fff7f7);
-            min-height: 100vh;
-        }
-        .page-title {
-            text-align: center;
-            font-size: 22px;
-            font-weight: 700;
-            background: linear-gradient(90deg, #3671e9, #f26522);
-            -webkit-background-clip: text;
-            color: transparent;
-            margin-bottom: 18px;
-            letter-spacing: 0.5px;
-        }
-        .tab-wrap {
-            display: flex;
-            border-bottom: 2px solid #e0e7ff;
-            margin-bottom: 12px;
-            background: #fff;
-            border-radius: 10px 10px 0 0;
-            overflow: hidden;
-        }
-        .tab-item {
-            flex: 1;
-            padding: 10px 6px;
-            font-size: 14px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            background: transparent;
-            font-weight: 500;
-        }
-        .tab-item:hover {
-            background: #f0f4ff;
-        }
-        .tab-item.active {
-            background: #3671e9;
-            color: #fff;
-            font-weight: bold;
-        }
-        .filter-box {
-            background: #ffffff;
-            padding: 12px;
-            border-radius: 10px;
-            box-shadow: 0 4px 16px rgba(54, 113, 233, 0.1);
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            margin-bottom: 12px;
-            flex-wrap: wrap;
-        }
-        .filter-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .filter-item label {
-            font-size: 13px;
-            font-weight: 500;
-            color: #333;
-            white-space: nowrap;
-        }
-        select {
-            padding: 6px 8px;
-            border: 1px solid #d0d7f5;
-            border-radius: 6px;
-            font-size: 13px;
-            min-width: 80px;
-            transition: border 0.2s;
-        }
-        select:focus {
-            outline: none;
-            border-color: #3671e9;
-        }
-        .count-tip {
-            color: #3671e9;
-            font-weight: bold;
-            font-size: 13px;
-            white-space: nowrap;
-        }
-        .btn {
-            padding: 6px 10px;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: background 0.2s;
-            white-space: nowrap;
-        }
-        #importBtn {background: #3671e9;}
-        #importBtn:hover {background: #255ed8;}
-        #exportCsvBtn {background: #22c55e;}
-        #exportCsvBtn:hover {background: #16a34a;}
-        #exportHtmlBtn {background: #f97316;}
-        #exportHtmlBtn:hover {background: #ea580c;}
-        #fileInput {display: none;}
-        .tab-panel {display: none;}
-        .tab-panel.show {display: block;}
-        /* ±Ì∏Ò»›∆˜∫·œÚπˆ∂Ø£¨ ÷ª˙◊Û”“ª¨∂Ø */
-        .table-wrap {
-            width: 100%;
-            overflow-x: auto;
-            border-radius: 10px;
-        }
-        table {
-            min-width: 720px;
-            width: 100%;
-            border-collapse: collapse;
-            background: #fff;
-            overflow: hidden;
-            box-shadow: 0 4px 18px rgba(0,0,0,0.06);
-        }
-        th, td {
-            padding: 10px 6px;
-            text-align: center;
-            border: none;
-            border-bottom: 1px solid #f0f0f0;
-            font-size: 13px;
-        }
-        th {
-            background: linear-gradient(90deg, #3671e9, #5488f2);
-            color: #fff;
-            font-weight: 500;
-        }
-        tr:nth-child(even) {background-color: #f9fbff;}
-        tr:hover {
-            background-color: #eef4ff;
-            cursor: pointer;
-            transition: background 0.2s ease;
-        }
-        .rank-top1 {background: #fff7e0 !important;}
-        .rank-top2 {background: #e8f0ff !important;}
-        .rank-top3 {background: #e8fff0 !important;}
-        .mask {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0,0,0,0.45);
-            display: none;
-            z-index: 99;
-            backdrop-filter: blur(2px);
-        }
-        .remark-drawer {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 100%;
-            max-width: 420px;
-            height: 100vh;
-            background: #fff;
-            box-shadow: -4px 0 24px rgba(0,0,0,0.12);
-            padding: 24px 16px;
-            transition: right 0.35s ease;
-            z-index: 100;
-        }
-        .remark-drawer.open {right: 0;}
-        .drawer-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 8px;
-        }
-        .drawer-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #222;
-        }
-        .close-btn {
-            border: none;
-            background: transparent;
-            font-size: 24px;
-            cursor: pointer;
-            color: #999;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            transition: background 0.2s;
-        }
-        .close-btn:hover {
-            background: #f0f0f0;
-            color: #333;
-        }
-        .drawer-info {
-            margin-bottom: 16px;
-            line-height: 1.8;
-            font-size: 14px;
-        }
-        .drawer-info p {margin: 4px 0;}
-        .drawer-info span {
-            color: #3671e9;
-            font-weight: 500;
-        }
-        .drawer-remark-box {
-            margin-top: 12px;
-            padding: 12px;
-            background: #f8faff;
-            border-radius: 8px;
-            min-height: 120px;
-            white-space: pre-wrap;
-            line-height: 1.6;
-            color: #333;
-            font-size: 14px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ÊïôÂ∏àËØÑÂàÜÊéíË°åÊ¶ú</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: #f5f5f7;
+      color: #1a1a1a;
+      line-height: 1.6;
+    }
+
+    /* Â§¥ÈÉ® */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid #e5e5e5;
+      padding: 16px;
+    }
+
+    .header-content {
+      max-width: 480px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 20px;
+    }
+
+    .header-title h1 {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .header-title p {
+      font-size: 12px;
+      color: #666;
+      margin: 0;
+    }
+
+    /* ÂÆπÂô® */
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    /* Âä†ËΩΩÁä∂ÊÄÅ */
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #e5e5e5;
+      border-top-color: #ff6b6b;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+      to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+
+    @keyframes fadeOut {
+      from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      to { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+    }
+
+    /* ÈîôËØØÁä∂ÊÄÅ */
+    .error {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+    }
+
+    .error button {
+      margin-top: 16px;
+      padding: 10px 24px;
+      background: #ff6b6b;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    /* ÊéíË°åÊ¶úÂàóË°® */
+    .ranking-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .ranking-item {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .ranking-item:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transform: translateY(-1px);
+    }
+
+    .ranking-item:active {
+      transform: scale(0.98);
+    }
+
+    .rank-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .rank-1 {
+      background: #fff8e1;
+      color: #f9a825;
+    }
+
+    .rank-2 {
+      background: #f5f5f5;
+      color: #757575;
+    }
+
+    .rank-3 {
+      background: #fff3e0;
+      color: #e65100;
+    }
+
+    .rank-other {
+      background: #f5f5f5;
+      color: #999;
+    }
+
+    .rank-icon {
+      font-size: 20px;
+    }
+
+    /* ‰ª∑Ê†ºÂàÜÊ°£Ê†áÁ≠æ */
+    .range-tabs {
+      display: flex;
+      gap: 8px;
+      padding: 12px 16px;
+      background: white;
+      border-bottom: 1px solid #e5e5e5;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .range-tab {
+      flex: 1;
+      min-width: 60px;
+      padding: 8px 12px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 500;
+      color: #666;
+      background: #f5f5f5;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .range-tab.active {
+      background: #ff6b6b;
+      color: white;
+    }
+
+    .range-tab:hover:not(.active) {
+      background: #e8e8e8;
+    }
+
+    .teacher-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .teacher-name {
+      font-size: 16px;
+      font-weight: 600;
+      margin: 0 0 4px 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .teacher-count {
+      font-size: 12px;
+      color: #666;
+    }
+
+    .teacher-scores {
+      font-size: 11px;
+      color: #888;
+      margin-top: 4px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .teacher-scores span {
+      background: #f5f5f5;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .teacher-score {
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .score-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: #4caf50;
+    }
+
+    .score-label {
+      font-size: 11px;
+      color: #999;
+    }
+
+    .arrow {
+      color: #ff6b6b;
+      font-size: 20px;
+      margin-left: 4px;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff5f5;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .ranking-item:hover .arrow {
+      background: #ff6b6b;
+      color: white;
+    }
+
+    /* ËØ¶ÊÉÖÈ°µ */
+    .detail-page {
+      display: none;
+      min-height: 100vh;
+      background: #f5f5f7;
+    }
+
+    .detail-page.active {
+      display: block;
+    }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 12px 16px;
+      background: none;
+      border: none;
+      color: #666;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .back-btn:hover {
+      color: #333;
+    }
+
+    /* ÊïôÂ∏àÂç°Áâá */
+    .teacher-card {
+      background: linear-gradient(135deg, #fff5f5, #ffeeee);
+      border-radius: 12px;
+      padding: 16px;
+      margin: 0 16px 12px;
+      text-align: center;
+    }
+
+    .teacher-card h2 {
+      font-size: 20px;
+      font-weight: 700;
+      margin: 0 0 4px 0;
+    }
+
+    .teacher-card .avg-score {
+      font-size: 36px;
+      font-weight: 800;
+      color: #ee5a5a;
+      margin: 0 4px;
+    }
+
+    .teacher-card .avg-label {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .teacher-card .total-count {
+      font-size: 13px;
+      color: #666;
+      margin-top: 4px;
+    }
+
+    .teacher-card .teacher-id {
+      font-size: 12px;
+      color: #999;
+      margin: 2px 0 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      padding: 2px 8px;
+      background: rgba(0,0,0,0.05);
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+
+    .teacher-card .teacher-id:hover {
+      background: rgba(0,0,0,0.1);
+    }
+
+    .teacher-card .teacher-id .copy-icon {
+      font-size: 10px;
+      opacity: 0.6;
+    }
+
+    /* ËØÑ‰ª∑Âç°Áâá */
+    .eval-card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      margin: 0 16px 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .eval-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #f0f0f0;
+      margin-bottom: 12px;
+    }
+
+    .eval-header.compact {
+      padding-bottom: 8px;
+      margin-bottom: 8px;
+    }
+
+    .eval-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .eval-score {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .eval-score-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .eval-score-value {
+      font-size: 24px;
+      font-weight: 800;
+      color: #ee5a5a;
+    }
+
+    .stars {
+      display: flex;
+      gap: 2px;
+    }
+
+    .star {
+      color: #ffc107;
+      font-size: 16px;
+    }
+
+    .star.empty {
+      color: #e0e0e0;
+    }
+
+    /* ËØÑÂàÜÊù° */
+    .score-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .score-bars-compact .score-bar {
+      margin-bottom: 6px;
+    }
+
+    .score-bar-label {
+      width: 40px;
+      font-size: 12px;
+      color: #666;
+    }
+
+    .score-bar-track {
+      flex: 1;
+      height: 4px;
+      background: #f0f0f0;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .score-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #ff6b6b, #ee5a5a);
+      border-radius: 2px;
+      transition: width 0.5s ease;
+    }
+
+    .score-bar-value {
+      width: 32px;
+      text-align: right;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* Â±ûÊÄßÁΩëÊ†º */
+    .attrs-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding-top: 12px;
+      border-top: 1px solid #f0f0f0;
+      margin-top: 12px;
+    }
+
+    .attrs-grid.compact {
+      gap: 6px;
+      padding-top: 8px;
+      margin-top: 8px;
+    }
+
+    .attr-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+    }
+
+    .attr-label {
+      color: #666;
+    }
+
+    .attr-value {
+      font-weight: 500;
+    }
+
+    .attr-full {
+      grid-column: span 2;
+    }
+
+    /* ËØÑ‰ª∑ÂÜÖÂÆπ */
+    .eval-content {
+      padding-top: 12px;
+      border-top: 1px solid #f0f0f0;
+      margin-top: 12px;
+    }
+
+    .eval-content.compact {
+      padding-top: 8px;
+      margin-top: 8px;
+    }
+
+    .eval-content-label {
+      font-size: 12px;
+      color: #999;
+      margin-bottom: 8px;
+    }
+
+    .eval-content-text {
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .eval-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #999;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #f0f0f0;
+    }
+
+    .eval-meta.compact {
+      margin-top: 8px;
+      padding-top: 8px;
+    }
+
+    /* ÂàÜÈ°µÊéßÂà∂ */
+    .pagination {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px;
+      background: white;
+      border-radius: 12px;
+      margin: 0 16px;
+    }
+
+    .page-btn {
+      padding: 10px 20px;
+      border: 1px solid #e0e0e0;
+      background: white;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .page-btn:hover:not(:disabled) {
+      background: #f5f5f5;
+    }
+
+    .page-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .page-info {
+      font-size: 14px;
+      color: #666;
+    }
+
+    /* Á©∫Áä∂ÊÄÅ */
+    .empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: #999;
+    }
+  </style>
 </head>
 <body>
-    <h1 class="page-title">√¿ ≥≤‚∆¿∞Òµ•(∏ˆ»À∞Ê£¨∞Æ–≈≤ª–≈)</h1>
-
-    <div class="tab-wrap">
-        <div class="tab-item active" data-tab="unTest">Œ¥ µ≤‚∞Ò</div>
-        <div class="tab-item" data-tab="tested"> µ≤‚∞Ò</div>
+    <!-- ÊéíË°åÊ¶úÈ°µ -->
+  <div id="rankingPage">
+    <div class="header">
+      <div class="header-content">
+        <div class="header-icon">üèÜ</div>
+        <div class="header-title">
+          <h1>ÊïôÂ∏àËØÑÂàÜÊéíË°åÊ¶ú</h1>
+          <p>Âü∫‰∫éÁªºÂêàËØÑÂàÜÂÆûÊó∂ÊéíÂêç</p>
+        </div>
+      </div>
     </div>
-
-    <div class="filter-box">
-        <div class="filter-item">
-            <label>–Õ∫≈£∫</label>
-            <select id="typeSelect">
-                <option value="">»´≤ø</option>
-                <option value="A">A</option>
-                <option value="B">B</option>
-                <option value="C">C</option>
-                <option value="D">D</option>
-                <option value="E">E</option>
-            </select>
-        </div>
-        <div class="filter-item">
-            <label>º€∏Ò£∫</label>
-            <select id="priceSelect">
-                <option value="">»´≤ø</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-            </select>
-        </div>
-        <div class="count-tip">π≤ <span id="currentCount">0</span> Ãı</div>
-        <input type="file" id="fileInput" accept=".csv" />
-        <button class="btn" id="importBtn">µº»ÎCSV</button>
-        <button class="btn" id="exportCsvBtn">µº≥ˆCSV</button>
-        <button class="btn" id="exportHtmlBtn">µº≥ˆHTML</button>
+    <!-- ‰ª∑Ê†ºÂàÜÊ°£Ê†áÁ≠æ -->
+    <div class="range-tabs">
+      <div class="range-tab active" data-range="all" onclick="switchRange('all')">ÊÄªÊ¶ú</div>
+      <div class="range-tab" data-range="3-4" onclick="switchRange('3-4')">3-4</div>
+      <div class="range-tab" data-range="5" onclick="switchRange('5')">5</div>
+      <div class="range-tab" data-range="6" onclick="switchRange('6')">6</div>
+      <div class="range-tab" data-range="7-10" onclick="switchRange('7-10')">7-10</div>
     </div>
-
-    <div class="tab-panel show" id="panel-unTest">
-        <div class="table-wrap">
-            <table>
-                <thead>
-                    <tr>
-                        <th>≈≈√˚</th>
-                        <th>ID</th>
-                        <th>√˚≥∆</th>
-                        <th>◊‹∑÷</th>
-                        <th>–Õ∫≈</th>
-                        <th>º€∏Ò</th>
-                        <th>—’÷µ</th>
-                        <th>Ãÿ…´</th>
-                        <th>∑˛ŒÒ</th>
-                    </tr>
-                </thead>
-                <tbody id="table-unTest"></tbody>
-            </table>
+    <div class="container">
+      <div id="rankingList">
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Âä†ËΩΩ‰∏≠...</p>
         </div>
+      </div>
     </div>
+  </div>
 
-    <div class="tab-panel" id="panel-tested">
-        <div class="table-wrap">
-            <table>
-                <thead>
-                    <tr>
-                        <th>≈≈√˚</th>
-                        <th>ID</th>
-                        <th>√˚≥∆</th>
-                        <th>◊‹∑÷</th>
-                        <th>–Õ∫≈</th>
-                        <th>º€∏Ò</th>
-                        <th>—’÷µ</th>
-                        <th>Ãÿ…´</th>
-                        <th>∑˛ŒÒ</th>
-                    </tr>
-                </thead>
-                <tbody id="table-tested"></tbody>
-            </table>
-        </div>
-    </div>
+  <!-- ËØ¶ÊÉÖÈ°µ -->
+  <div id="detailPage" class="detail-page">
+    <button class="back-btn" onclick="showRanking()">
+      <span>‚Üê</span>
+      <span>ËøîÂõûÊéíË°åÊ¶ú</span>
+    </button>
+    <div id="detailContent"></div>
+  </div>
 
-    <div class="mask" id="mask"></div>
-    <div class="remark-drawer" id="drawer">
-        <div class="drawer-header">
-            <div class="drawer-title">≤‚∆¿œÍ«È & ±∏◊¢</div>
-            <button class="close-btn" id="closeBtn">°¡</button>
-        </div>
-        <div class="drawer-info">
-            <p>Œ®“ªID£∫<span id="drawId"></span></p>
-            <p>≤‚∆¿√˚≥∆£∫<span id="drawName"></span></p>
-            <p>◊€∫œ◊‹∑÷£∫<span id="drawScore"></span></p>
-            <p>∞Òµ•∑÷¿‡£∫<span id="drawStatus"></span></p>
-        </div>
-        <div style="font-weight:500;font-size:14px;">ÕÍ’˚±∏◊¢ƒ⁄»›£∫</div>
-        <div class="drawer-remark-box" id="drawRemark"></div>
-    </div>
+  <script>
+    // Cloudflare Workers API ÈÖçÁΩÆ
+    const API_BASE_URL = 'https://super-soldier-api.bycby88.workers.dev';
 
-<script>
-// ≥ı ºƒ⁄÷√ ˝æ›
-let rawData = [
-    {id:"DuoEr8868",status:" µ≤‚",name:"∞Æ«Ÿ∫£˜Ïœ´",score:10.5,type:"D",price:5,look:4,feature:3.5,service:3,remark:""},
-    {id:"aayang18983377514",status:" µ≤‚",name:"¡˙Õ∑À¬∂‡∂‡",score:8,type:"B",price:5,look:3,feature:2,service:3,remark:""},
-    {id:"cf123789",status:" µ≤‚",name:"≥˛∑∆",score:10,type:"C",price:5,look:3.5,feature:3.5,service:3,remark:""},
-    {id:"DanDan688",status:" µ≤‚",name:"∞Æ«Ÿ∫£µ§µ§",score:8,type:"B",price:5,look:3,feature:2,service:3,remark:"ÕÍ»´≤ªÕ∆ºˆ"},
-    {id:"a529826",status:" µ≤‚",name:"««ﬁ±",score:12,type:"C",price:5,look:4,feature:4,service:4,remark:""},
-    {id:"Huaxizi123",status:" µ≤‚",name:"ª®Œ˜◊”",score:10.5,type:"B",price:4,look:3.5,feature:3.5,service:3.5,remark:""},
-    {id:"dsbDD",status:"Œ¥ µ≤‚",name:"¥Û Ø∞” 07∂‡∂‡",score:11.5,type:"C",price:5,look:4,feature:4.5,service:3,remark:"ø¥∆¿¥Õ¶ƒÍ«·µƒ£¨∑˛ŒÒ¥˝∂®"},
-    {id:"jiajia530",status:"Œ¥ µ≤‚",name:"º—ƒ›",score:10.5,type:"C",price:5,look:3.5,feature:3.5,service:3.5,remark:"Ãÿ…´¥˝∂®"},
-    {id:"saosaob",status:"Œ¥ µ≤‚",name:"ƒœ∆∫À¨À¨",score:10.5,type:"B",price:5,look:3.5,feature:3,service:4,remark:"¥˝∂®"},
-];
-
-const mask = document.getElementById("mask");
-const drawer = document.getElementById("drawer");
-const closeBtn = document.getElementById("closeBtn");
-const drawId = document.getElementById("drawId");
-const drawName = document.getElementById("drawName");
-const drawScore = document.getElementById("drawScore");
-const drawStatus = document.getElementById("drawStatus");
-const drawRemark = document.getElementById("drawRemark");
-const typeSelect = document.getElementById("typeSelect");
-const priceSelect = document.getElementById("priceSelect");
-const currentCountDom = document.getElementById("currentCount");
-const importBtn = document.getElementById("importBtn");
-const exportCsvBtn = document.getElementById("exportCsvBtn");
-const exportHtmlBtn = document.getElementById("exportHtmlBtn");
-const fileInput = document.getElementById("fileInput");
-
-function closeDrawer() {
-    mask.style.display = "none";
-    drawer.classList.remove("open");
-}
-closeBtn.addEventListener("click", closeDrawer);
-mask.addEventListener("click", closeDrawer);
-
-importBtn.addEventListener("click", ()=>fileInput.click());
-
-// ±Í◊ºCSV÷◊÷∑˚Ω‚Œˆ£¨Ω‚æˆ∂¡»°Ωÿ∂œ°¢∂™––Œ Ã‚
-function parseCSV(text) {
-    const rows = [];
-    let currentRow = [];
-    let cell = "";
-    let inQuote = false;
-    for (let i = 0; i < text.length; i++) {
-        const c = text[i];
-        const next = text[i+1];
-        if (inQuote) {
-            if (c === '"' && next === '"') {
-                cell += '"';
-                i++;
-            } else if (c === '"') {
-                inQuote = false;
-            } else {
-                cell += c;
-            }
-        } else {
-            if (c === '"') {
-                inQuote = true;
-            } else if (c === ",") {
-                currentRow.push(cell.trim());
-                cell = "";
-            } else if (c === "\n" || c === "\r") {
-                if (c === "\r" && next === "\n") i++;
-                currentRow.push(cell.trim());
-                rows.push(currentRow);
-                currentRow = [];
-                cell = "";
-            } else {
-                cell += c;
-            }
+    // API ËØ∑Ê±ÇÂ∞ÅË£Ö
+    async function apiRequest(endpoint, options = {}) {
+      const url = `${API_BASE_URL}${endpoint}`;
+      const response = await fetch(url, {
+        ...options,
+        headers: {
+          'Content-Type': 'application/json',
+          ...options.headers
         }
+      });
+      if (!response.ok) {
+        throw new Error(`API Error: ${response.status}`);
+      }
+      return response.json();
     }
-    if (cell || currentRow.length > 0) {
-        currentRow.push(cell.trim());
-        rows.push(currentRow);
-    }
-    return rows;
-}
 
-// –ﬁ∏¥∫ÛµƒCSVµº»Î¬ﬂº≠
-fileInput.addEventListener("change", function(e){
-    const file = e.target.files[0];
-    if(!file) return;
-    const reader = new FileReader();
-    reader.readAsText(file, "UTF-8");
-    reader.onload = function(event){
-        const text = event.target.result;
-        const allRows = parseCSV(text);
-        // π˝¬À”––ß––£¨±ÿ–Î≤ª…Ÿ”⁄11¡–
-        const validRows = allRows.filter(r => r.length >= 11);
-        if(validRows.length < 2) {
-            alert("CSVŒﬁ”––ß ˝æ›£¨«ÎºÏ≤ÈŒƒº˛£°");
-            return;
+    let rankingsData = [];
+    let currentTeacherEvals = [];
+    let currentEvalIndex = 0;
+
+    // ‰ª∑Ê†ºÂàÜÊ°£ÈÖçÁΩÆ
+    const PRICE_RANGES = [
+      { key: 'all', label: 'ÊÄªÊ¶ú', min: 0, max: Infinity },
+      { key: '3-4', label: '3-4', min: 300, max: 499 },
+      { key: '5', label: '5', min: 500, max: 599 },
+      { key: '6', label: '6', min: 600, max: 699 },
+      { key: '7-10', label: '7-10', min: 700, max: 1099 }
+    ];
+
+    let currentRange = 'all';
+    let allRankingsData = [];
+
+    // Ëé∑ÂèñÊéíË°åÊ¶úÊï∞ÊçÆ
+    async function fetchRankings() {
+      try {
+        const result = await apiRequest('/api/rankings');
+        const data = result.data;
+
+        if (!data || data.length === 0) {
+          document.getElementById('rankingList').innerHTML = '<div class="empty">ÊöÇÊó†Êï∞ÊçÆ</div>';
+          return;
         }
-        const newData = [];
-        // Ã¯π˝±ÌÕ∑£¨∂¡»°À˘”– ˝æ›––
-        for(let i = 1; i < validRows.length; i++){
-            const r = validRows[i];
-            newData.push({
-                id: r[1] || "",
-                name: r[2] || "",
-                score: Number(r[3]) || 0,
-                type: r[4] || "",
-                price: Number(r[5]) || 0,
-                look: Number(r[6]) || 0,
-                feature: Number(r[7]) || 0,
-                service: Number(r[8]) || 0,
-                status: r[9] || "",
-                remark: r[10] || ""
-            });
-        }
-        rawData = newData;
-        renderList();
-        alert(`µº»Î≥…π¶£¨π≤∂¡»° ${newData.length} Ãı ˝æ›`);
-        fileInput.value = "";
-    }
-})
 
-// “≥«©«–ªª
-const tabItems = document.querySelectorAll(".tab-item");
-let activeTab = "unTest";
-tabItems.forEach(tab => {
-    tab.addEventListener("click", () => {
-        tabItems.forEach(i => i.classList.remove("active"));
-        tab.classList.add("active");
-        activeTab = tab.dataset.tab;
-        document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("show"));
-        document.getElementById(`panel-${activeTab}`).classList.add("show");
-        renderList();
-    })
-});
+        // Êåâ teacher_id ÂàÜÁªÑËÅöÂêà
+        const teacherMap = {};
+        data.forEach(item => {
+          if (!teacherMap[item.teacher_id]) {
+            teacherMap[item.teacher_id] = {
+              teacher_id: item.teacher_id,
+              teacher_name: item.teacher_name,
+              price: item.price,
+              bust: item.bust,
+              scores: [],
+              scores_look: [],
+              scores_breast: [],
+              scores_figure: [],
+              scores_service: []
+            };
+          }
+          teacherMap[item.teacher_id].scores.push(item.final_score);
+          teacherMap[item.teacher_id].scores_look.push(item.score_look);
+          teacherMap[item.teacher_id].scores_breast.push(item.score_breast);
+          teacherMap[item.teacher_id].scores_figure.push(item.score_figure);
+          teacherMap[item.teacher_id].scores_service.push(item.score_service);
+        });
 
-// …∏—°π˝¬À
-function getFilterData() {
-    const filterType = typeSelect.value;
-    const filterPrice = priceSelect.value;
-    let list = rawData.filter(item => item.status === (activeTab === "unTest" ? "Œ¥ µ≤‚" : " µ≤‚"));
-    if(filterType) list = list.filter(i => i.type === filterType);
-    if(filterPrice) list = list.filter(i => i.price === Number(filterPrice));
-    list.sort((a,b) => b.score - a.score);
-    return list;
-}
+        // ËÆ°ÁÆóÂπ≥ÂùáÂàÜÂíåÂêÑÁª¥Â∫¶Âπ≥ÂùáÂàÜ
+        allRankingsData = Object.values(teacherMap).map(item => ({
+          teacher_id: item.teacher_id,
+          teacher_name: item.teacher_name,
+          price: item.price,
+          bust: item.bust,
+          avg_score: item.scores.reduce((a, b) => a + b, 0) / item.scores.length,
+          avg_look: item.scores_look.reduce((a, b) => a + b, 0) / item.scores_look.length,
+          avg_breast: item.scores_breast.reduce((a, b) => a + b, 0) / item.scores_breast.length,
+          avg_figure: item.scores_figure.reduce((a, b) => a + b, 0) / item.scores_figure.length,
+          avg_service: item.scores_service.reduce((a, b) => a + b, 0) / item.scores_service.length,
+          count: item.scores.length
+        }));
 
-// ‰÷»æ±Ì∏Ò
-function renderList() {
-    const data = getFilterData();
-    currentCountDom.innerText = data.length;
-    const tbodyId = `table-${activeTab}`;
-    const tbody = document.getElementById(tbodyId);
-    tbody.innerHTML = "";
-    data.forEach((item, index) => {
-        const tr = document.createElement("tr");
-        if(index === 0) tr.className = "rank-top1";
-        if(index === 1) tr.className = "rank-top2";
-        if(index === 2) tr.className = "rank-top3";
-        tr.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${item.id}</td>
-            <td>${item.name}</td>
-            <td>${item.score}</td>
-            <td>${item.type}</td>
-            <td>${item.price}</td>
-            <td>${item.look}</td>
-            <td>${item.feature}</td>
-            <td>${item.service}</td>
+        renderRankings();
+      } catch (err) {
+        document.getElementById('rankingList').innerHTML = `
+          <div class="error">
+            <p>Âä†ËΩΩÂ§±Ë¥•: ${err.message}</p>
+            <button onclick="fetchRankings()">ÈáçËØï</button>
+          </div>
         `;
-        tr.onclick = () => {
-            drawId.innerText = item.id;
-            drawName.innerText = item.name;
-            drawScore.innerText = item.score;
-            drawStatus.innerText = item.status;
-            drawRemark.innerText = item.remark || "‘›Œﬁ±∏◊¢–≈œ¢";
-            mask.style.display = "block";
-            drawer.classList.add("open");
-        }
-        tbody.appendChild(tr);
-    })
-}
-
-// µº≥ˆCSV
-function exportCSV() {
-    if (rawData.length === 0) {
-        alert("Œﬁ ˝æ›£¨Œﬁ∑®µº≥ˆ£°");
-        return;
+      }
     }
-    const headers = ["≈≈√˚","ID","√˚≥∆","◊‹∑÷","–Õ∫≈","º€∏Ò","—’÷µ","Ãÿ…´","∑˛ŒÒ","◊¥Ã¨","±∏◊¢"];
-    let csvStr = headers.join(",") + "\n";
-    const sortedAllData = [...rawData].sort((a,b) => b.score - a.score);
-    sortedAllData.forEach((item, idx) => {
-        const esc = s => `"${String(s).replace(/"/g,'""')}"`;
-        const row = [
-            idx + 1,
-            esc(item.id),
-            esc(item.name),
-            item.score,
-            esc(item.type),
-            item.price,
-            item.look,
-            item.feature,
-            item.service,
-            esc(item.status),
-            esc(item.remark)
-        ];
-        csvStr += row.join(",") + "\n";
-    });
-    const blob = new Blob(["\uFEFF" + csvStr], { type: "text/csv;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.download = `√¿ ≥≤‚∆¿_»´≤ø ˝æ›.csv`;
-    a.href = url;
-    a.click();
-    URL.revokeObjectURL(url);
-}
-exportCsvBtn.addEventListener("click", exportCSV);
 
-// µº≥ˆÕÍ’˚HTML£∫“≥√Ê∞¥≈•±£¡Ù£¨µº≥ˆŒƒº˛◊‘∂Ø“˛≤ÿ∞¥≈•
-function exportFullHtml() {
-    const dataStr = JSON.stringify(rawData, null, 4);
-    let htmlCode = document.documentElement.outerHTML;
-    htmlCode = htmlCode.replace(/let rawData = \[.*?\];/s, `let rawData = ${dataStr};`);
+    // ÂàáÊç¢‰ª∑Ê†ºÂàÜÊ°£
+    function switchRange(rangeKey) {
+      currentRange = rangeKey;
+      // Êõ¥Êñ∞Ê†áÁ≠æÊ†∑Âºè
+      document.querySelectorAll('.range-tab').forEach(tab => {
+        tab.classList.remove('active');
+        if (tab.dataset.range === rangeKey) {
+          tab.classList.add('active');
+        }
+      });
+      renderRankings();
+    }
 
-    // ≤Â»Î—˘ Ω“˛≤ÿµº»Îµº≥ˆ∞¥≈•”Î…œ¥´øÚ
-    const hideCss = `<style>#importBtn,#exportCsvBtn,#exportHtmlBtn,#fileInput{display:none !important;}</style>`;
-    htmlCode = htmlCode.replace("</head>", hideCss + "</head>");
+    // Ê∏≤ÊüìÊéíË°åÊ¶ú
+    function renderRankings() {
+      // Ê†πÊçÆÂΩìÂâçÈÄâ‰∏≠ÁöÑ‰ª∑Ê†ºËåÉÂõ¥Á≠õÈÄâ
+      const rangeConfig = PRICE_RANGES.find(r => r.key === currentRange);
+      let filteredData = allRankingsData;
+      if (currentRange !== 'all') {
+        filteredData = allRankingsData.filter(t => t.price >= rangeConfig.min && t.price <= rangeConfig.max);
+      }
 
-    // «Â¿ÌŒﬁ”√µº≥ˆµº»ÎJS¥˙¬Î£¨±‹√‚±®¥Ì
-    htmlCode = htmlCode.replace(/importBtn\.addEventListener\("click", \(\)=>fileInput\.click\(\)\);/,"");
-    htmlCode = htmlCode.replace(/fileInput\.addEventListener\("change", function\(e\)\{[\s\S]*?fileInput\.value = "";\s*\}\)/,"");
-    htmlCode = htmlCode.replace(/function exportCSV\(\)\{[\s\S]*?exportCsvBtn\.addEventListener\("click", exportCSV\);/,"");
-    htmlCode = htmlCode.replace(/exportHtmlBtn\.addEventListener\("click", exportFullHtml\);/,"");
-    htmlCode = htmlCode.replace(/function exportFullHtml\(\)\{[\s\S]*?alert\("ÕÍ’˚HTML“—µº≥ˆ£°¥Úø™\/∏¥÷∆Œƒº˛ ˝æ›≤ªª·∂™ ß"\);\}/,"");
+      // ÊéíÂ∫èÂπ∂Ê∑ªÂä†ÊéíÂêç
+      filteredData = filteredData.sort((a, b) => b.avg_score - a.avg_score);
+      filteredData.forEach((item, index) => {
+        item.rank = index + 1;
+      });
 
-    const blob = new Blob([htmlCode], {type:"text/html;charset=utf-8"});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.download = "√¿ ≥≤‚∆¿∞Òµ•(”¿æ√±£¥Ê∞Ê).html";
-    a.href = url;
-    a.click();
-    URL.revokeObjectURL(url);
-    alert("µº≥ˆÕÍ≥…£°µº≥ˆŒƒº˛ƒ⁄µº»Îµº≥ˆ∞¥≈•“—◊‘∂Ø“˛≤ÿ");
-}
-exportHtmlBtn.addEventListener("click", exportFullHtml);
+      if (filteredData.length === 0) {
+        document.getElementById('rankingList').innerHTML = '<div class="empty">ËØ•‰ª∑Ê†ºÂå∫Èó¥ÊöÇÊó†Êï∞ÊçÆ</div>';
+        return;
+      }
 
-typeSelect.addEventListener("change", renderList);
-priceSelect.addEventListener("change", renderList);
-renderList();
-</script>
+      const html = filteredData.map((teacher) => {
+        let rankClass = 'rank-other';
+        let rankContent = `<span>${teacher.rank}</span>`;
+
+        if (teacher.rank === 1) {
+          rankClass = 'rank-1';
+          rankContent = '1';
+        } else if (teacher.rank === 2) {
+          rankClass = 'rank-2';
+          rankContent = '2';
+        } else if (teacher.rank === 3) {
+          rankClass = 'rank-3';
+          rankContent = '3';
+        }
+
+        return `
+          <div class="ranking-item" onclick="showDetail('${teacher.teacher_id}')">
+            <div class="rank-badge ${rankClass}">${rankContent}</div>
+            <div class="teacher-info">
+              <h3 class="teacher-name">${teacher.teacher_name}</h3>
+              <p class="teacher-count">${teacher.count} Êù° ¬∑ ¬•${teacher.price} ¬∑ ËÉ∏Âõ¥${teacher.bust || '-'}</p>
+              <p class="teacher-scores">
+                <span>È¢úÂÄº${teacher.avg_look.toFixed(1)}</span>
+                <span>ËÉ∏${teacher.avg_breast.toFixed(1)}</span>
+                <span>Ë∫´Êùê${teacher.avg_figure.toFixed(1)}</span>
+                <span>ÊúçÂä°${teacher.avg_service.toFixed(1)}</span>
+              </p>
+            </div>
+            <div class="teacher-score">
+              <div class="score-value">${teacher.avg_score.toFixed(1)}</div>
+              <div class="score-label">ÂàÜ</div>
+            </div>
+            <span class="arrow">‚Ä∫</span>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('rankingList').innerHTML = `<div class="ranking-list">${html}</div>`;
+    }
+
+    // Ëé∑ÂèñÊïôÂ∏àËØÑ‰ª∑ËØ¶ÊÉÖ
+    async function fetchTeacherDetail(teacherId) {
+      try {
+        const result = await apiRequest(`/api/teacher-evaluations?teacher_id=${encodeURIComponent(teacherId)}`);
+        return result.data || [];
+      } catch (err) {
+        console.error('Ëé∑ÂèñËØ¶ÊÉÖÂ§±Ë¥•:', err);
+        return [];
+      }
+    }
+
+    // ÊòæÁ§∫ËØ¶ÊÉÖÈ°µ
+    async function showDetail(teacherId) {
+      currentTeacherEvals = await fetchTeacherDetail(teacherId);
+      currentEvalIndex = 0;
+
+      if (currentTeacherEvals.length === 0) {
+        alert('ÊöÇÊó†ËØÑ‰ª∑ËÆ∞ÂΩï');
+        return;
+      }
+
+      renderDetail();
+      document.getElementById('rankingPage').style.display = 'none';
+      document.getElementById('detailPage').classList.add('active');
+    }
+
+    // Ê∏≤ÊüìËØ¶ÊÉÖÈ°µ
+    function renderDetail() {
+      const currentEval = currentTeacherEvals[currentEvalIndex];
+      const avgScore = currentTeacherEvals.reduce((sum, e) => sum + e.final_score, 0) / currentTeacherEvals.length;
+
+      // ÁîüÊàêÊòüÊòü
+      const stars = Math.round((currentEval.final_score / 10) * 5);
+      const starsHtml = [1, 2, 3, 4, 5].map(i =>
+        `<span class="star ${i <= stars ? '' : 'empty'}">‚òÖ</span>`
+      ).join('');
+
+      // ËØÑÂàÜÊù°
+      const scoreBars = [
+        { label: 'È¢úÂÄº', score: currentEval.score_look },
+        { label: 'ËÉ∏ÈÉ®', score: currentEval.score_breast },
+        { label: 'Ë∫´Êùê', score: currentEval.score_figure },
+        { label: 'ÊúçÂä°', score: currentEval.score_service }
+      ].map(item => `
+        <div class="score-bar">
+          <span class="score-bar-label">${item.label}</span>
+          <div class="score-bar-track">
+            <div class="score-bar-fill" style="width: ${(item.score / 10) * 100}%"></div>
+          </div>
+          <span class="score-bar-value">${item.score.toFixed(1)}</span>
+        </div>
+      `).join('');
+
+      // Â±ûÊÄßÁΩëÊ†º
+      const attrs = [
+        { label: 'Âπ¥ÈæÑ', value: currentEval.age ? currentEval.age + 'Â≤Å' : '-' },
+        { label: 'Ë∫´È´ò', value: currentEval.height ? currentEval.height + 'cm' : '-' },
+        { label: '‰ΩìÈáç', value: currentEval.weight ? currentEval.weight + 'kg' : '-' },
+        { label: '‰ª∑Ê†º', value: currentEval.price ? '¬•' + currentEval.price : '-' },
+        { label: 'ËÉ∏Âõ¥', value: currentEval.bust || '-' },
+        { label: 'ËÉ∏Âûã', value: currentEval.breast_nature },
+        { label: 'ÁöÆËÇ§', value: currentEval.skin },
+        { label: 'Â£∞Èü≥', value: currentEval.voice },
+        { label: 'Á∫πË∫´', value: currentEval.tattoo },
+        { label: 'ËÖ∞Âõ¥', value: currentEval.waist }
+      ];
+
+      if (currentEval.shortcoming) {
+        attrs.push({ label: 'Áº∫ÁÇπ', value: currentEval.shortcoming, full: true });
+      }
+
+      const attrsHtml = attrs.map(item => `
+        <div class="attr-item ${item.full ? 'attr-full' : ''}">
+          <span class="attr-label">${item.label}</span>
+          <span class="attr-value">${item.value}</span>
+        </div>
+      `).join('');
+
+      // Êà™Êñ≠ÊèèËø∞ÊñáÂ≠óÂà∞150Â≠ó
+      let descText = currentEval.description || '';
+      if (descText.length > 150) {
+        descText = descText.substring(0, 150) + '...';
+      }
+
+      const html = `
+        <div class="teacher-card">
+          <h2>${currentEval.teacher_name}</h2>
+          <p class="teacher-id" onclick="copyToClipboard('${currentEval.teacher_id}')">
+            ID: ${currentEval.teacher_id}
+            <span class="copy-icon">üìã</span>
+          </p>
+          <p class="total-count">ÂÖ± ${currentTeacherEvals.length} Êù°ËØÑ‰ª∑</p>
+        </div>
+
+        <div class="eval-card">
+          <div class="eval-header compact">
+            <div class="eval-score-row">
+              <span class="eval-score-value">${currentEval.final_score.toFixed(1)}</span>
+              <div class="stars">${starsHtml}</div>
+            </div>
+          </div>
+
+          <div class="score-bars-compact">
+            ${scoreBars}
+          </div>
+
+          <div class="attrs-grid compact">
+            ${attrsHtml}
+          </div>
+
+          <div class="eval-content compact">
+            <p class="eval-content-text">${descText}</p>
+          </div>
+
+          <div class="eval-meta compact">
+            <span>${currentEval.evaluator}</span>
+            <span>${new Date(currentEval.created_at).toLocaleDateString()}</span>
+          </div>
+        </div>
+
+        <div class="pagination">
+          <button class="page-btn" onclick="prevEval()" ${currentEvalIndex === 0 ? 'disabled' : ''}>
+            ‚Üê ‰∏ä‰∏ÄÊù°
+          </button>
+          <span class="page-info">${currentEvalIndex + 1} / ${currentTeacherEvals.length}</span>
+          <button class="page-btn" onclick="nextEval()" ${currentEvalIndex === currentTeacherEvals.length - 1 ? 'disabled' : ''}>
+            ‰∏ã‰∏ÄÊù° ‚Üí
+          </button>
+        </div>
+      `;
+
+      document.getElementById('detailContent').innerHTML = html;
+    }
+
+    // ‰∏ä‰∏ÄÊù°ËØÑ‰ª∑
+    function prevEval() {
+      if (currentEvalIndex > 0) {
+        currentEvalIndex--;
+        renderDetail();
+      }
+    }
+
+    // ‰∏ã‰∏ÄÊù°ËØÑ‰ª∑
+    function nextEval() {
+      if (currentEvalIndex < currentTeacherEvals.length - 1) {
+        currentEvalIndex++;
+        renderDetail();
+      }
+    }
+
+    // ËøîÂõûÊéíË°åÊ¶ú
+    function showRanking() {
+      document.getElementById('rankingPage').style.display = 'block';
+      document.getElementById('detailPage').classList.remove('active');
+    }
+
+    // Â§çÂà∂Âà∞Ââ™Ë¥¥Êùø
+    async function copyToClipboard(text) {
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast('Â∑≤Â§çÂà∂: ' + text);
+      } catch (err) {
+        // ÈôçÁ∫ßÊñπÊ°à
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        showToast('Â∑≤Â§çÂà∂: ' + text);
+      }
+    }
+
+    // ÊòæÁ§∫ÊèêÁ§∫
+    function showToast(message) {
+      const toast = document.createElement('div');
+      toast.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0,0,0,0.8);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-size: 14px;
+        z-index: 1000;
+        animation: fadeIn 0.2s ease;
+      `;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => {
+        toast.style.animation = 'fadeOut 0.2s ease';
+        setTimeout(() => document.body.removeChild(toast), 200);
+      }, 1500);
+    }
+
+    // ÂàùÂßãÂåñ
+    fetchRankings();
+  </script>
 </body>
 </html>
