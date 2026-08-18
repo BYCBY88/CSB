@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>评分排行榜</title>
+  <title>教师评分排行榜</title>
   <style>
     * {
       margin: 0;
@@ -468,6 +468,14 @@
       font-weight: 600;
     }
 
+    .score-desc-text {
+      font-size: 11px;
+      color: #888;
+      margin-top: 2px;
+      margin-bottom: 8px;
+      padding-left: 48px;
+    }
+
     /* 属性网格 */
     .attrs-grid {
       display: grid;
@@ -649,10 +657,10 @@
     // 价格分档配置
     const PRICE_RANGES = [
       { key: 'all', label: '总榜', min: 0, max: Infinity },
-      { key: '3-4', label: '3-4', min: 3, max: 4 },
-      { key: '5', label: '5', min: 5, max: 5 },
-      { key: '6', label: '6', min: 6, max: 6 },
-      { key: '7-10', label: '7-10', min: 7, max: 10 }
+      { key: '3-4', label: '3-4', min: 300, max: 499 },
+      { key: '5', label: '5', min: 500, max: 599 },
+      { key: '6', label: '6', min: 600, max: 699 },
+      { key: '7-10', label: '7-10', min: 700, max: 1099 }
     ];
 
     let currentRange = 'all';
@@ -827,13 +835,24 @@
         `<span class="star ${i <= stars ? '' : 'empty'}">★</span>`
       ).join('');
 
-      // 评分条
+      // 评分描述映射
+      const scoreDescMaps = {
+        look: ['丑', '普通偏下', '大众脸，不丑不美', '好看，有辨识度', '惊艳，素颜能打'],
+        breast: ['胸型塌陷，影响整体美感', '胸型下垂，注意体态调整', '胸型一般，基本正常', '胸型挺拔，形态良好', '胸型完美，形态极佳'],
+        figure: ['太差，没法看', '没腰没臀，平板身材', '不胖不瘦，正常身材', '有腰有臀，曲线明显', '前凸后翘，穿啥都炸'],
+        service: ['态度恶劣，没法沟通', '服务一般，有些机车', '稍有服务，态度积极', '比较专业服务，有特色', '专业服务，体验极佳']
+      };
+
+      // 评分条（带描述）
       const scoreBars = [
-        { label: '颜值', score: currentEval.score_look },
-        { label: '胸部', score: currentEval.score_breast },
-        { label: '身材', score: currentEval.score_figure },
-        { label: '服务', score: currentEval.score_service }
-      ].map(item => `
+        { key: 'look', label: '颜值', score: currentEval.score_look },
+        { key: 'breast', label: '胸部', score: currentEval.score_breast },
+        { key: 'figure', label: '身材', score: currentEval.score_figure },
+        { key: 'service', label: '服务', score: currentEval.score_service }
+      ].map(item => {
+        const scoreIndex = Math.min(Math.max(Math.floor(item.score / 2) - 1, 0), 4);
+        const desc = scoreDescMaps[item.key][scoreIndex];
+        return `
         <div class="score-bar">
           <span class="score-bar-label">${item.label}</span>
           <div class="score-bar-track">
@@ -841,7 +860,18 @@
           </div>
           <span class="score-bar-value">${item.score.toFixed(1)}</span>
         </div>
-      `).join('');
+        <div class="score-desc-text">${desc}</div>
+      `;
+      }).join('');
+
+      // 中文映射表
+      const labelMaps = {
+        breast_nature: { soft: '天然柔软', normal: '轻微科技', hard: '帮帮硬' },
+        skin: { smooth: '光滑细腻', normal: '正常', rough: '粗糙暗沉' },
+        voice: { pleasant: '悦耳动听', normal: '正常', bad: '难听刺耳' },
+        tattoo: { light: '无纹身', small: '小面积', heavy: '大面积' },
+        waist: { tight: '紧致', flat: '平坦', belly: '小肚子' }
+      };
 
       // 属性网格
       const attrs = [
@@ -850,11 +880,11 @@
         { label: '体重', value: currentEval.weight ? currentEval.weight + 'kg' : '-' },
         { label: '价格', value: currentEval.price ? '¥' + currentEval.price : '-' },
         { label: '胸围', value: currentEval.bust || '-' },
-        { label: '胸型质感', value: currentEval.breast_nature },
-        { label: '皮肤', value: currentEval.skin },
-        { label: '声音', value: currentEval.voice },
-        { label: '纹身', value: currentEval.tattoo },
-        { label: '腰腹', value: currentEval.waist }
+        { label: '胸型质感', value: labelMaps.breast_nature[currentEval.breast_nature] || currentEval.breast_nature },
+        { label: '皮肤', value: labelMaps.skin[currentEval.skin] || currentEval.skin },
+        { label: '声音', value: labelMaps.voice[currentEval.voice] || currentEval.voice },
+        { label: '纹身', value: labelMaps.tattoo[currentEval.tattoo] || currentEval.tattoo },
+        { label: '腰腹', value: labelMaps.waist[currentEval.waist] || currentEval.waist }
       ];
 
       if (currentEval.shortcoming) {
