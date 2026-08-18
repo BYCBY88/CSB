@@ -555,8 +555,8 @@
       <div class="header-content">
         <div class="header-icon">🏆</div>
         <div class="header-title">
-          <h1>教师评分排行榜</h1>
-          <p>基于综合评分实时排名</p>
+          <h1>排行榜</h1>
+          <p>综合评分实时排名</p>
         </div>
       </div>
     </div>
@@ -761,10 +761,10 @@
               <h3 class="teacher-name">${teacher.teacher_name}</h3>
               <p class="teacher-count">${teacher.count} 条 · P${teacher.price} · 胸围${teacher.bust || '-'}</p>
               <p class="teacher-scores">
-                <span>颜值${teacher.avg_look.toFixed(1)}</span>
+                <span>颜${teacher.avg_look.toFixed(1)}</span>
                 <span>胸${teacher.avg_breast.toFixed(1)}</span>
-                <span>身材${teacher.avg_figure.toFixed(1)}</span>
-                <span>服务${teacher.avg_service.toFixed(1)}</span>
+                <span>身${teacher.avg_figure.toFixed(1)}</span>
+                <span>服${teacher.avg_service.toFixed(1)}</span>
               </p>
             </div>
             <div class="teacher-score">
@@ -814,7 +814,7 @@
       // 评分描述映射
       const scoreDescMaps = {
         look: ['丑', '普通偏下', '大众脸，不丑不美', '好看，有辨识度', '惊艳，素颜能打'],
-        breast: ['胸型塌陷，影响整体美感', '胸型下垂，注意体态调整', '胸型一般，基本正常', '胸型挺拔，形态良好', '胸型完美，形态极佳'],
+        breast: ['胸型塌陷', '胸型下垂', '胸型一般，基本正常', '胸型挺拔，形态良好', '胸型完美，形态极佳'],
         figure: ['太差，没法看', '没腰没臀，平板身材', '不胖不瘦，正常身材', '有腰有臀，曲线明显', '前凸后翘，穿啥都炸'],
         service: ['态度恶劣，没法沟通', '服务一般，有些机车', '稍有服务，态度积极', '比较专业服务，有特色', '专业服务，体验极佳']
       };
@@ -842,7 +842,7 @@
       const labelMaps = {
         breast_nature: { soft: '天然柔软', normal: '轻微科技', hard: '帮帮硬' },
         skin: { smooth: '光滑细腻', normal: '正常', rough: '粗糙暗沉' },
-        voice: { pleasant: '悦耳动听', normal: '正常', bad: '难听刺耳' },
+        voice: { pleasant: '好听', normal: '正常', bad: '不好听' },
         tattoo: { light: '无纹身', small: '小面积', heavy: '大面积' },
         waist: { tight: '紧致', flat: '平坦', belly: '小肚子' }
       };
