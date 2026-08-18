@@ -570,10 +570,10 @@
     </div>
     <!-- 价格分档标签 -->
     <div class="range-tabs">
-      <div class="range-tab active" data-range="all" onclick="switchRange('all')">总榜</div>
-      <div class="range-tab" data-range="4MAX" onclick="switchRange('4MAX')">4MAX</div>
-      <div class="range-tab" data-range="5" onclick="switchRange('5')">5</div>
-      <div class="range-tab" data-range="6+" onclick="switchRange('6+')">6+</div>
+      <div class="range-tab active" data-range="all" onclick="switchRange('all')">总榜<span class="tab-count"></span></div>
+      <div class="range-tab" data-range="4MAX" onclick="switchRange('4MAX')">4MAX<span class="tab-count"></span></div>
+      <div class="range-tab" data-range="5" onclick="switchRange('5')">5<span class="tab-count"></span></div>
+      <div class="range-tab" data-range="6+" onclick="switchRange('6+')">6+<span class="tab-count"></span></div>
     </div>
     <div class="container">
       <div id="rankingList">
@@ -623,6 +623,19 @@
     let currentRange = 'all';
     let allRankingsData = [];
     let searchKeyword = '';
+
+    // 更新各个tab的老师数量（前端聚合，不碰后端）
+    function updateTabTeacherCount(){
+      PRICE_RANGES.forEach(range=>{
+        // 每个档位下的老师总数（不包含搜索过滤，是该档位全部老师）
+        const cnt = allRankingsData.filter(t=> t.price >= range.min && t.price <= range.max).length;
+        const tabDom = document.querySelector(`.range-tab[data-range="${range.key}"] .tab-count`);
+        if(tabDom){
+          tabDom.textContent = `(${cnt})`;
+        }
+      })
+    }
+
     // 获取排行榜数据
     async function fetchRankings() {
       try {
@@ -667,6 +680,7 @@
           avg_service: item.scores_service.reduce((a, b) => a + b, 0) / item.scores_service.length,
           count: item.scores.length
         }));
+        updateTabTeacherCount();
         renderRankings();
       } catch (err) {
         document.getElementById('rankingList').innerHTML = `
