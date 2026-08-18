@@ -307,38 +307,29 @@
     .back-btn:hover {
       color: #333;
     }
-    /* 教师卡片 */
+    /* ========== 已修改：教师卡片 名字ID同行，压缩高度 ========== */
     .teacher-card {
       background: linear-gradient(135deg, #fff5f5, #ffeeee);
       border-radius: 12px;
-      padding: 16px;
+      padding: 10px 14px;
       margin: 0 16px 12px;
       text-align: center;
     }
+    .teacher-card .title-row {
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
     .teacher-card h2 {
-      font-size: 20px;
-      font-weight: 700;
-      margin: 0 0 4px 0;
-    }
-    .teacher-card .avg-score {
-      font-size: 36px;
-      font-weight: 800;
-      color: #ee5a5a;
-      margin: 0 4px;
-    }
-    .teacher-card .avg-label {
-      font-size: 14px;
-      color: #666;
-    }
-    .teacher-card .total-count {
-      font-size: 13px;
-      color: #666;
-      margin-top: 4px;
+      font-size:18px;
+      font-weight:700;
+      margin:0;
     }
     .teacher-card .teacher-id {
       font-size: 12px;
       color: #999;
-      margin: 2px 0 4px;
       display: inline-flex;
       align-items: center;
       gap: 4px;
@@ -354,6 +345,11 @@
     .teacher-card .teacher-id .copy-icon {
       font-size: 10px;
       opacity: 0.6;
+    }
+    .teacher-card .total-count {
+      font-size: 12px;
+      color: #666;
+      margin-top:6px;
     }
     /* 评价卡片 */
     .eval-card {
@@ -395,7 +391,6 @@
       font-weight: 800;
       color: #ee5a5a;
     }
-
     /* ==========修复星星样式 叠加裁切方案========== */
     .stars {
       position: relative;
@@ -414,7 +409,6 @@
       color:#ffc107;
       overflow:hidden;
     }
-
     /* 评分条 */
     .score-bar {
       display: flex;
@@ -795,7 +789,6 @@
     function renderDetail() {
       const currentEval = currentTeacherEvals[currentEvalIndex];
       const avgScore = currentTeacherEvals.reduce((sum, e) => sum + e.final_score, 0) / currentTeacherEvals.length;
-
       // ==========修复星星逻辑：裁切百分比，支持半星==========
       const starPercent = (currentEval.final_score / 10) * 100;
       const starsHtml = `
@@ -804,7 +797,6 @@
   <div class="stars-gold" style="width:${starPercent}%">★★★★★</div>
 </div>
       `;
-
       // 评分描述映射
       const scoreDescMaps = {
         look: ['丑', '普通偏下', '大众脸，不丑不美', '好看，有辨识度', '惊艳，素颜能打'],
@@ -867,13 +859,16 @@
       if (descText.length > 150) {
         descText = descText.substring(0, 150) + '...';
       }
+      // ==========已修改：名字ID放在同一行title-row==========
       const html = `
         <div class="teacher-card">
-          <h2>${currentEval.teacher_name}</h2>
-          <p class="teacher-id" onclick="copyToClipboard('${currentEval.teacher_id}')">
-            ID: ${currentEval.teacher_id}
-            <span class="copy-icon">📋</span>
-          </p>
+          <div class="title-row">
+            <h2>${currentEval.teacher_name}</h2>
+            <span class="teacher-id" onclick="copyToClipboard('${currentEval.teacher_id}')">
+              ID: ${currentEval.teacher_id}
+              <span class="copy-icon">📋</span>
+            </span>
+          </div>
           <p class="total-count">共 ${currentTeacherEvals.length} 条评价</p>
         </div>
         <div class="eval-card">
