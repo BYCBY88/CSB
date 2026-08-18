@@ -10,14 +10,12 @@
       padding: 0;
       box-sizing: border-box;
     }
-
     body {
       font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
       background: #f5f5f7;
       color: #1a1a1a;
       line-height: 1.6;
     }
-
     /* 头部 */
     .header {
       position: sticky;
@@ -28,7 +26,6 @@
       border-bottom: 1px solid #e5e5e5;
       padding: 16px;
     }
-
     .header-content {
       max-width: 480px;
       margin: 0 auto;
@@ -36,7 +33,6 @@
       align-items: center;
       gap: 12px;
     }
-
     .header-icon {
       width: 40px;
       height: 40px;
@@ -48,17 +44,54 @@
       color: white;
       font-size: 20px;
     }
-
     .header-title h1 {
       font-size: 18px;
       font-weight: 600;
       margin: 0;
     }
-
     .header-title p {
       font-size: 12px;
       color: #666;
       margin: 0;
+    }
+    /* 搜索区域 */
+    .search-wrap {
+      max-width: 480px;
+      margin: 0 auto;
+      padding:12px 16px;
+      background:#fff;
+      border-bottom:1px solid #e5e5e5;
+    }
+    .search-row {
+      display:flex;
+      gap:8px;
+    }
+    .search-input {
+      flex:1;
+      padding:10px 12px;
+      border:1px solid #e5e5e5;
+      border-radius:8px;
+      font-size:14px;
+      outline:none;
+    }
+    .search-input:focus {
+      border-color:#ff6b6b;
+    }
+    .search-btn,.search-clear-btn {
+      padding:0 14px;
+      height:40px;
+      border:none;
+      border-radius:8px;
+      font-size:14px;
+      cursor:pointer;
+    }
+    .search-btn {
+      background:#ff6b6b;
+      color:#fff;
+    }
+    .search-clear-btn {
+      background:#f5f5f5;
+      color:#666;
     }
 
     /* 容器 */
@@ -67,14 +100,12 @@
       margin: 0 auto;
       padding: 16px;
     }
-
     /* 加载状态 */
     .loading {
       text-align: center;
       padding: 40px;
       color: #666;
     }
-
     .spinner {
       width: 40px;
       height: 40px;
@@ -84,28 +115,23 @@
       animation: spin 1s linear infinite;
       margin: 0 auto 16px;
     }
-
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
-
     @keyframes fadeIn {
       from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
       to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
     }
-
     @keyframes fadeOut {
       from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
       to { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
     }
-
     /* 错误状态 */
     .error {
       text-align: center;
       padding: 40px;
       color: #666;
     }
-
     .error button {
       margin-top: 16px;
       padding: 10px 24px;
@@ -116,14 +142,12 @@
       cursor: pointer;
       font-size: 14px;
     }
-
     /* 排行榜列表 */
     .ranking-list {
       display: flex;
       flex-direction: column;
       gap: 12px;
     }
-
     .ranking-item {
       background: white;
       border-radius: 12px;
@@ -135,16 +159,13 @@
       cursor: pointer;
       transition: all 0.2s;
     }
-
     .ranking-item:hover {
       box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       transform: translateY(-1px);
     }
-
     .ranking-item:active {
       transform: scale(0.98);
     }
-
     .rank-badge {
       width: 44px;
       height: 44px;
@@ -156,31 +177,25 @@
       font-size: 14px;
       flex-shrink: 0;
     }
-
     .rank-1 {
       background: #fff8e1;
       color: #f9a825;
     }
-
     .rank-2 {
       background: #f5f5f5;
       color: #757575;
     }
-
     .rank-3 {
       background: #fff3e0;
       color: #e65100;
     }
-
     .rank-other {
       background: #f5f5f5;
       color: #999;
     }
-
     .rank-icon {
       font-size: 20px;
     }
-
     /* 价格分档标签 */
     .range-tabs {
       display: flex;
@@ -191,7 +206,6 @@
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
     }
-
     .range-tab {
       flex: 1;
       min-width: 60px;
@@ -206,21 +220,17 @@
       transition: all 0.2s;
       white-space: nowrap;
     }
-
     .range-tab.active {
       background: #ff6b6b;
       color: white;
     }
-
     .range-tab:hover:not(.active) {
       background: #e8e8e8;
     }
-
     .teacher-info {
       flex: 1;
       min-width: 0;
     }
-
     .teacher-name {
       font-size: 16px;
       font-weight: 600;
@@ -229,12 +239,10 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
-
     .teacher-count {
       font-size: 12px;
       color: #666;
     }
-
     .teacher-scores {
       font-size: 11px;
       color: #888;
@@ -242,29 +250,24 @@
       display: flex;
       gap: 8px;
     }
-
     .teacher-scores span {
       background: #f5f5f5;
       padding: 2px 6px;
       border-radius: 4px;
     }
-
     .teacher-score {
       text-align: right;
       flex-shrink: 0;
     }
-
     .score-value {
       font-size: 20px;
       font-weight: 700;
       color: #4caf50;
     }
-
     .score-label {
       font-size: 11px;
       color: #999;
     }
-
     .arrow {
       color: #ff6b6b;
       font-size: 20px;
@@ -278,23 +281,19 @@
       border-radius: 8px;
       transition: all 0.2s;
     }
-
     .ranking-item:hover .arrow {
       background: #ff6b6b;
       color: white;
     }
-
     /* 详情页 */
     .detail-page {
       display: none;
       min-height: 100vh;
       background: #f5f5f7;
     }
-
     .detail-page.active {
       display: block;
     }
-
     .back-btn {
       display: flex;
       align-items: center;
@@ -306,11 +305,9 @@
       font-size: 14px;
       cursor: pointer;
     }
-
     .back-btn:hover {
       color: #333;
     }
-
     /* 教师卡片 */
     .teacher-card {
       background: linear-gradient(135deg, #fff5f5, #ffeeee);
@@ -319,31 +316,26 @@
       margin: 0 16px 12px;
       text-align: center;
     }
-
     .teacher-card h2 {
       font-size: 20px;
       font-weight: 700;
       margin: 0 0 4px 0;
     }
-
     .teacher-card .avg-score {
       font-size: 36px;
       font-weight: 800;
       color: #ee5a5a;
       margin: 0 4px;
     }
-
     .teacher-card .avg-label {
       font-size: 14px;
       color: #666;
     }
-
     .teacher-card .total-count {
       font-size: 13px;
       color: #666;
       margin-top: 4px;
     }
-
     .teacher-card .teacher-id {
       font-size: 12px;
       color: #999;
@@ -357,16 +349,13 @@
       border-radius: 4px;
       transition: background 0.2s;
     }
-
     .teacher-card .teacher-id:hover {
       background: rgba(0,0,0,0.1);
     }
-
     .teacher-card .teacher-id .copy-icon {
       font-size: 10px;
       opacity: 0.6;
     }
-
     /* 评价卡片 */
     .eval-card {
       background: white;
@@ -375,7 +364,6 @@
       margin: 0 16px 16px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
-
     .eval-header {
       display: flex;
       justify-content: space-between;
@@ -384,50 +372,41 @@
       border-bottom: 1px solid #f0f0f0;
       margin-bottom: 12px;
     }
-
     .eval-header.compact {
       padding-bottom: 8px;
       margin-bottom: 8px;
     }
-
     .eval-title {
       font-size: 16px;
       font-weight: 600;
     }
-
     .eval-score {
       display: flex;
       align-items: center;
       gap: 8px;
     }
-
     .eval-score-row {
       display: flex;
       align-items: center;
       gap: 12px;
       width: 100%;
     }
-
     .eval-score-value {
       font-size: 24px;
       font-weight: 800;
       color: #ee5a5a;
     }
-
     .stars {
       display: flex;
       gap: 2px;
     }
-
     .star {
       color: #ffc107;
       font-size: 16px;
     }
-
     .star.empty {
       color: #e0e0e0;
     }
-
     /* 评分条 */
     .score-bar {
       display: flex;
@@ -435,17 +414,14 @@
       gap: 8px;
       margin-bottom: 8px;
     }
-
     .score-bars-compact .score-bar {
       margin-bottom: 6px;
     }
-
     .score-bar-label {
       width: 40px;
       font-size: 12px;
       color: #666;
     }
-
     .score-bar-track {
       flex: 1;
       height: 4px;
@@ -453,21 +429,18 @@
       border-radius: 2px;
       overflow: hidden;
     }
-
     .score-bar-fill {
       height: 100%;
       background: linear-gradient(90deg, #ff6b6b, #ee5a5a);
       border-radius: 2px;
       transition: width 0.5s ease;
     }
-
     .score-bar-value {
       width: 32px;
       text-align: right;
       font-size: 12px;
       font-weight: 600;
     }
-
     .score-desc-text {
       font-size: 11px;
       color: #888;
@@ -475,7 +448,6 @@
       margin-bottom: 8px;
       padding-left: 48px;
     }
-
     /* 属性网格 */
     .attrs-grid {
       display: grid;
@@ -485,54 +457,44 @@
       border-top: 1px solid #f0f0f0;
       margin-top: 12px;
     }
-
     .attrs-grid.compact {
       gap: 6px;
       padding-top: 8px;
       margin-top: 8px;
     }
-
     .attr-item {
       display: flex;
       justify-content: space-between;
       font-size: 13px;
     }
-
     .attr-label {
       color: #666;
     }
-
     .attr-value {
       font-weight: 500;
     }
-
     .attr-full {
       grid-column: span 2;
     }
-
     /* 评价内容 */
     .eval-content {
       padding-top: 12px;
       border-top: 1px solid #f0f0f0;
       margin-top: 12px;
     }
-
     .eval-content.compact {
       padding-top: 8px;
       margin-top: 8px;
     }
-
     .eval-content-label {
       font-size: 12px;
       color: #999;
       margin-bottom: 8px;
     }
-
     .eval-content-text {
       font-size: 14px;
       line-height: 1.5;
     }
-
     .eval-meta {
       display: flex;
       justify-content: space-between;
@@ -542,12 +504,10 @@
       padding-top: 12px;
       border-top: 1px solid #f0f0f0;
     }
-
     .eval-meta.compact {
       margin-top: 8px;
       padding-top: 8px;
     }
-
     /* 分页控制 */
     .pagination {
       display: flex;
@@ -558,7 +518,6 @@
       border-radius: 12px;
       margin: 0 16px;
     }
-
     .page-btn {
       padding: 10px 20px;
       border: 1px solid #e0e0e0;
@@ -568,21 +527,17 @@
       cursor: pointer;
       transition: all 0.2s;
     }
-
     .page-btn:hover:not(:disabled) {
       background: #f5f5f5;
     }
-
     .page-btn:disabled {
       opacity: 0.5;
       cursor: not-allowed;
     }
-
     .page-info {
       font-size: 14px;
       color: #666;
     }
-
     /* 空状态 */
     .empty {
       text-align: center;
@@ -603,6 +558,14 @@
         </div>
       </div>
     </div>
+    <!-- 搜索框 -->
+    <div class="search-wrap">
+      <div class="search-row">
+        <input id="searchInput" class="search-input" placeholder="输入老师ID / 名字模糊搜索" onkeydown="if(event.key==='Enter')doSearch()">
+        <button class="search-btn" onclick="doSearch()">搜索</button>
+        <button class="search-clear-btn" onclick="clearSearch()">清空</button>
+      </div>
+    </div>
     <!-- 价格分档标签 -->
     <div class="range-tabs">
       <div class="range-tab active" data-range="all" onclick="switchRange('all')">总榜</div>
@@ -619,7 +582,6 @@
       </div>
     </div>
   </div>
-
   <!-- 详情页 -->
   <div id="detailPage" class="detail-page">
     <button class="back-btn" onclick="showRanking()">
@@ -628,11 +590,9 @@
     </button>
     <div id="detailContent"></div>
   </div>
-
   <script>
     // Cloudflare Workers API 配置
     const API_BASE_URL = 'https://search.byg88.biz';
-
     // API 请求封装
     async function apiRequest(endpoint, options = {}) {
       const url = `${API_BASE_URL}${endpoint}`;
@@ -648,11 +608,9 @@
       }
       return response.json();
     }
-
     let rankingsData = [];
     let currentTeacherEvals = [];
     let currentEvalIndex = 0;
-
     // 价格分档配置
     const PRICE_RANGES = [
       { key: 'all', label: '总榜', min: 0, max: Infinity },
@@ -660,21 +618,19 @@
       { key: '5', label: '5', min: 5, max: 5 },
       { key: '6+', label: '6+', min: 6, max: 10 }
     ];
-
     let currentRange = 'all';
     let allRankingsData = [];
+    let searchKeyword = '';
 
     // 获取排行榜数据
     async function fetchRankings() {
       try {
         const result = await apiRequest('/api/rankings');
         const data = result.data;
-
         if (!data || data.length === 0) {
           document.getElementById('rankingList').innerHTML = '<div class="empty">暂无数据</div>';
           return;
         }
-
         // 按 teacher_id 分组聚合
         const teacherMap = {};
         data.forEach(item => {
@@ -697,7 +653,6 @@
           teacherMap[item.teacher_id].scores_figure.push(item.score_figure);
           teacherMap[item.teacher_id].scores_service.push(item.score_service);
         });
-
         // 计算平均分和各维度平均分
         allRankingsData = Object.values(teacherMap).map(item => ({
           teacher_id: item.teacher_id,
@@ -711,7 +666,6 @@
           avg_service: item.scores_service.reduce((a, b) => a + b, 0) / item.scores_service.length,
           count: item.scores.length
         }));
-
         renderRankings();
       } catch (err) {
         document.getElementById('rankingList').innerHTML = `
@@ -721,6 +675,19 @@
           </div>
         `;
       }
+    }
+
+    //执行搜索
+    function doSearch(){
+      const inputDom = document.getElementById('searchInput');
+      searchKeyword = inputDom.value.trim().toLowerCase();
+      renderRankings();
+    }
+    //清空搜索
+    function clearSearch(){
+      document.getElementById('searchInput').value='';
+      searchKeyword='';
+      renderRankings();
     }
 
     // 切换价格分档
@@ -741,25 +708,30 @@
       // 根据当前选中的价格范围筛选
       const rangeConfig = PRICE_RANGES.find(r => r.key === currentRange);
       let filteredData = allRankingsData;
+      //价格区间过滤
       if (currentRange !== 'all') {
-        filteredData = allRankingsData.filter(t => t.price >= rangeConfig.min && t.price <= rangeConfig.max);
+        filteredData = filteredData.filter(t => t.price >= rangeConfig.min && t.price <= rangeConfig.max);
       }
-
+      //模糊搜索过滤：匹配名字或ID
+      if(searchKeyword){
+        filteredData = filteredData.filter(t=>{
+          const nameMatch = t.teacher_name.toLowerCase().includes(searchKeyword);
+          const idMatch = t.teacher_id.toLowerCase().includes(searchKeyword);
+          return nameMatch || idMatch;
+        })
+      }
       // 排序并添加排名
       filteredData = filteredData.sort((a, b) => b.avg_score - a.avg_score);
       filteredData.forEach((item, index) => {
         item.rank = index + 1;
       });
-
       if (filteredData.length === 0) {
-        document.getElementById('rankingList').innerHTML = '<div class="empty">该价格区间暂无数据</div>';
+        document.getElementById('rankingList').innerHTML = '<div class="empty">该条件下暂无匹配数据</div>';
         return;
       }
-
       const html = filteredData.map((teacher) => {
         let rankClass = 'rank-other';
         let rankContent = `<span>${teacher.rank}</span>`;
-
         if (teacher.rank === 1) {
           rankClass = 'rank-1';
           rankContent = '1';
@@ -770,7 +742,6 @@
           rankClass = 'rank-3';
           rankContent = '3';
         }
-
         return `
           <div class="ranking-item" onclick="showDetail('${teacher.teacher_id}')">
             <div class="rank-badge ${rankClass}">${rankContent}</div>
@@ -792,10 +763,8 @@
           </div>
         `;
       }).join('');
-
       document.getElementById('rankingList').innerHTML = `<div class="ranking-list">${html}</div>`;
     }
-
     // 获取教师评价详情
     async function fetchTeacherDetail(teacherId) {
       try {
@@ -806,33 +775,27 @@
         return [];
       }
     }
-
     // 显示详情页
     async function showDetail(teacherId) {
       currentTeacherEvals = await fetchTeacherDetail(teacherId);
       currentEvalIndex = 0;
-
       if (currentTeacherEvals.length === 0) {
         alert('暂无评价记录');
         return;
       }
-
       renderDetail();
       document.getElementById('rankingPage').style.display = 'none';
       document.getElementById('detailPage').classList.add('active');
     }
-
     // 渲染详情页
     function renderDetail() {
       const currentEval = currentTeacherEvals[currentEvalIndex];
       const avgScore = currentTeacherEvals.reduce((sum, e) => sum + e.final_score, 0) / currentTeacherEvals.length;
-
       // 生成星星
       const stars = Math.round((currentEval.final_score / 10) * 5);
       const starsHtml = [1, 2, 3, 4, 5].map(i =>
         `<span class="star ${i <= stars ? '' : 'empty'}">★</span>`
       ).join('');
-
       // 评分描述映射
       const scoreDescMaps = {
         look: ['丑', '普通偏下', '大众脸，不丑不美', '好看，有辨识度', '惊艳，素颜能打'],
@@ -840,7 +803,6 @@
         figure: ['太差，没法看', '没腰没臀，平板身材', '不胖不瘦，正常身材', '有腰有臀，曲线明显', '前凸后翘，穿啥都炸'],
         service: ['态度恶劣，没法沟通', '服务一般，有些机车', '稍有服务，态度积极', '比较专业服务，有特色', '专业服务，体验极佳']
       };
-
       // 评分条（带描述）
       const scoreBars = [
         { key: 'look', label: '颜值', score: currentEval.score_look },
@@ -861,7 +823,6 @@
         <div class="score-desc-text">${desc}</div>
       `;
       }).join('');
-
       // 中文映射表
       const labelMaps = {
         breast_nature: { soft: '天然柔软', normal: '轻微科技', hard: '帮帮硬' },
@@ -870,13 +831,12 @@
         tattoo: { light: '无纹身', small: '小面积', heavy: '大面积' },
         waist: { tight: '紧致', flat: '平坦', belly: '小肚子' }
       };
-
       // 属性网格
       const attrs = [
         { label: '年龄', value: currentEval.age ? currentEval.age + '岁' : '-' },
         { label: '身高', value: currentEval.height ? currentEval.height + 'cm' : '-' },
         { label: '体重', value: currentEval.weight ? currentEval.weight + 'kg' : '-' },
-        { label: '价格', value: currentEval.price ? '¥' + currentEval.price : '-' },
+        { label: '价格', value: currentEval.price ? 'P' + currentEval.price : '-' },
         { label: '胸围', value: currentEval.bust || '-' },
         { label: '胸型质感', value: labelMaps.breast_nature[currentEval.breast_nature] || currentEval.breast_nature },
         { label: '皮肤', value: labelMaps.skin[currentEval.skin] || currentEval.skin },
@@ -884,24 +844,20 @@
         { label: '纹身', value: labelMaps.tattoo[currentEval.tattoo] || currentEval.tattoo },
         { label: '腰腹', value: labelMaps.waist[currentEval.waist] || currentEval.waist }
       ];
-
       if (currentEval.shortcoming) {
         attrs.push({ label: '缺点', value: currentEval.shortcoming, full: true });
       }
-
       const attrsHtml = attrs.map(item => `
         <div class="attr-item ${item.full ? 'attr-full' : ''}">
           <span class="attr-label">${item.label}</span>
           <span class="attr-value">${item.value}</span>
         </div>
       `).join('');
-
       // 截断描述文字到150字
       let descText = currentEval.description || '';
       if (descText.length > 150) {
         descText = descText.substring(0, 150) + '...';
       }
-
       const html = `
         <div class="teacher-card">
           <h2>${currentEval.teacher_name}</h2>
@@ -911,7 +867,6 @@
           </p>
           <p class="total-count">共 ${currentTeacherEvals.length} 条评价</p>
         </div>
-
         <div class="eval-card">
           <div class="eval-header compact">
             <div class="eval-score-row">
@@ -919,25 +874,20 @@
               <div class="stars">${starsHtml}</div>
             </div>
           </div>
-
           <div class="score-bars-compact">
             ${scoreBars}
           </div>
-
           <div class="attrs-grid compact">
             ${attrsHtml}
           </div>
-
           <div class="eval-content compact">
             <p class="eval-content-text">${descText}</p>
           </div>
-
           <div class="eval-meta compact">
             <span>${currentEval.evaluator}</span>
             <span>${new Date(currentEval.created_at).toLocaleDateString()}</span>
           </div>
         </div>
-
         <div class="pagination">
           <button class="page-btn" onclick="prevEval()" ${currentEvalIndex === 0 ? 'disabled' : ''}>
             ← 上一条
@@ -948,10 +898,8 @@
           </button>
         </div>
       `;
-
       document.getElementById('detailContent').innerHTML = html;
     }
-
     // 上一条评价
     function prevEval() {
       if (currentEvalIndex > 0) {
@@ -959,7 +907,6 @@
         renderDetail();
       }
     }
-
     // 下一条评价
     function nextEval() {
       if (currentEvalIndex < currentTeacherEvals.length - 1) {
@@ -967,13 +914,11 @@
         renderDetail();
       }
     }
-
     // 返回排行榜
     function showRanking() {
       document.getElementById('rankingPage').style.display = 'block';
       document.getElementById('detailPage').classList.remove('active');
     }
-
     // 复制到剪贴板
     async function copyToClipboard(text) {
       try {
@@ -992,7 +937,6 @@
         showToast('已复制: ' + text);
       }
     }
-
     // 显示提示
     function showToast(message) {
       const toast = document.createElement('div');
@@ -1016,7 +960,6 @@
         setTimeout(() => document.body.removeChild(toast), 200);
       }, 1500);
     }
-
     // 初始化
     fetchRankings();
   </script>
